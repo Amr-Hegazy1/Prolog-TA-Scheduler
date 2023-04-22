@@ -93,16 +93,6 @@ slot_assignment(LabsNum,[TA|TAs],RemTAs,Assignment) :-
 
 
 
-helper_ass(LabsNum,TAs,RemTAs,Assignment) :-
-
-	slot_assignment(LabsNum,TAs,RemTAs1,Assignment1),
-
-	permutation(RemTAs1,RemTAs),
-	permutation(Assignment1,Assignment).
-
-
-
-
 
 
 %%%%%%%% Part e
@@ -125,5 +115,18 @@ ta_slot_assignment([TA|TAs],[TA1|TAs],Name) :-
 	S1 is S-1,
 	TA1 = ta(Name,S1).
 	
-	
+
+%%%%%%%%% PREDICATES FOR TESTING ONLY 
+
+%helper_ass(LabsNum,TAs,RemTAs,Assignment) :-
+
+%	slot_assignment(LabsNum,TAs,RemTAs1,Assignment1),
+
+%	permutation(RemTAs1,RemTAs),
+%	permutation(Assignment1,Assignment).
+
+count_sched(WeekSlots,TAs,DayMax,WeekSched,N) :-
+
+	bagof(WeekSched,week_schedule(WeekSlots,TAs,DayMax,WeekSched),S),
+	length(S,N).
 
