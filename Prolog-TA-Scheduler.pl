@@ -1,4 +1,4 @@
-%%%%% Part a
+%%%%%% Part a
 
 week_schedule([],_,_,[]).
 week_schedule([WeekSlot|WeekSlots],TAs,DayMax,[Assignment|WeekSched]) :-
@@ -6,8 +6,6 @@ week_schedule([WeekSlot|WeekSlots],TAs,DayMax,[Assignment|WeekSched]) :-
 	day_schedule(WeekSlot,TAs,RemTAs,Assignment),
 	max_slots_per_day(Assignment,DayMax),
 	week_schedule(WeekSlots,RemTAs,DayMax,WeekSched).
-
-
 
 
 
@@ -38,19 +36,9 @@ day_schedule([DaySlot|DaySlots],TAs,RemTAs,Assignment) :-
 
 max_slots_per_day(DaySched,Max) :-
 
-	concat(DaySched,DaySchedConc),
-	list_to_set(DaySchedConc,DaySchedSet),
-
-	check_occurunce(DaySchedConc,DaySchedSet,Max).
-
-
-
-concat([],[]).
-concat([H|T],Res) :-
-
-	concat(T,Res1),
-	append(H,Res1,Res).
-
+	flatten(DaySched, DaySchedFlattened),
+	list_to_set(DaySchedFlattened,DaySchedSet),
+	check_occurunce(DaySchedFlattened,DaySchedSet,Max).
 
 
 check_occurunce(_,[],_).
@@ -72,6 +60,8 @@ count(X,[H|T],C) :-
 	X \= H,
 	count(X,T,C).
 
+						
+
 
 
 
@@ -79,6 +69,7 @@ count(X,[H|T],C) :-
 %%%%%%%% Part d
 
 slot_assignment(0,TAs,TAs,[]).
+
 slot_assignment(LabsNum,[TA|TAs],RemTAs,[Name|AT]) :-
 
 	LabsNum > 0, 
@@ -87,12 +78,14 @@ slot_assignment(LabsNum,[TA|TAs],RemTAs,[Name|AT]) :-
 
 	
 	ta_slot_assignment([TA|TAs],[H1|T1],Name),
+
 	
 	slot_assignment(LabsNum1,T1,RemTAs1,AT),
 	append([H1],RemTAs1,RemTAs).
 	
 slot_assignment(LabsNum,[TA|TAs],RemTAs,Assignment) :-	
 	LabsNum > 0,
+	
 	slot_assignment(LabsNum,TAs,RemTAs1,Assignment),
 	append([TA],RemTAs1,RemTAs).
 	
@@ -100,7 +93,12 @@ slot_assignment(LabsNum,[TA|TAs],RemTAs,Assignment) :-
 
 
 
+helper_ass(LabsNum,TAs,RemTAs,Assignment) :-
 
+	slot_assignment(LabsNum,TAs,RemTAs1,Assignment1),
+
+	permutation(RemTAs1,RemTAs),
+	permutation(Assignment1,Assignment).
 
 
 
