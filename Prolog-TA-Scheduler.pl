@@ -68,9 +68,13 @@ count(X,[H|T],C) :-
 
 %%%%%%%% Part d
 
-slot_assignment(0,TAs,TAs,[]).
+slot_assignment(LabsNum,TAs,RemTAs,Assignment) :- slot_assignment_helper(LabsNum,TAs,RemTAs,Assignment1),
+												  permutation(Assignment1,Assignment).
 
-slot_assignment(LabsNum,[TA|TAs],RemTAs,[Name|AT]) :-
+
+slot_assignment_helper(0,TAs,TAs,[]).
+
+slot_assignment_helper(LabsNum,[TA|TAs],RemTAs,[Name|AT]) :-
 
 	LabsNum > 0, 
 	TA = ta(Name,_),
@@ -80,13 +84,16 @@ slot_assignment(LabsNum,[TA|TAs],RemTAs,[Name|AT]) :-
 	ta_slot_assignment([TA|TAs],[H1|T1],Name),
 
 	
-	slot_assignment(LabsNum1,T1,RemTAs1,AT),
+	slot_assignment_helper(LabsNum1,T1,RemTAs1,AT),
+	
+	
 	append([H1],RemTAs1,RemTAs).
 	
-slot_assignment(LabsNum,[TA|TAs],RemTAs,Assignment) :-	
+slot_assignment_helper(LabsNum,[TA|TAs],RemTAs,Assignment) :-	
 	LabsNum > 0,
 	
-	slot_assignment(LabsNum,TAs,RemTAs1,Assignment),
+	slot_assignment_helper(LabsNum,TAs,RemTAs1,Assignment),
+	
 	append([TA],RemTAs1,RemTAs).
 	
 	
